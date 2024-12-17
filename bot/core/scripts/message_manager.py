@@ -13,16 +13,15 @@ async def get_server_status(bot):
     try:
         status = await bot.server.async_status()
 
-        player_names = [player.name for player in status.players.sample] if status.players.sample else []
+        names = [player.name for player in status.players.sample] if status.players.sample else []
+        player_names_sorted = sorted(names)
 
-        return True, status.players.online, status.version.name, player_names
+        return True, status.players.online, status.version.name, player_names_sorted
     except:
         return False, 0, "Desconhecido", []
 
 
 def create_embed(ip, server_online, players_online, version, player_names):
-    player_names_sorted = sorted(player_names)
-
     sao_paulo_tz = pytz.timezone('America/Sao_Paulo')
     current_time = datetime.now(sao_paulo_tz)
 
@@ -30,7 +29,7 @@ def create_embed(ip, server_online, players_online, version, player_names):
         title="Status do Servidor Minecraft",
         color=0x00ff00 if server_online else 0xff0000
     )
-    embed.add_field(name="🖥️ IP", value=ip if server_online else "Nenhum", inline=False)
+    embed.add_field(name="🖥️ IP", value=f"{ip}:25565" if server_online else "Nenhum", inline=False)
     embed.add_field(name="📶 Status", value="🟢 Online" if server_online else "🔴 Offline", inline=False)
     embed.add_field(
         name="👥 Jogadores Online",
@@ -38,10 +37,7 @@ def create_embed(ip, server_online, players_online, version, player_names):
         inline=False
     )
 
-    if player_names:
-        embed.add_field(name="📝 Nomes", value=", ".join(player_names_sorted), inline=False)
-    else:
-        embed.add_field(name="📝 Nomes", value="Nenhum", inline=False)
+    embed.add_field(name="📝 Nomes", value=", ".join(player_names) if player_names else "Nenhum", inline=False)
 
     embed.add_field(name="🌐 Versão", value=version, inline=False)
 

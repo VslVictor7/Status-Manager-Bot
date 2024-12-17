@@ -6,8 +6,8 @@ services:
     container_name: bot-dev
     image: discord-bot:dev
     volumes:
-      - "D:/Minecraft Servers/Servidor/world/stats:/app/world/stats"
-      - "D:/Minecraft Servers/Servidor/logs/latest.log:/app/logs/latest.log"
+      - "D:/Minecraft Servers/Server-Container/Servidor/world/stats:/app/world/stats"
+      - "d:/Minecraft Servers/Server-Container/Servidor/logs/latest.log:/app/logs/latest.log"
     env_file:
       - .env.dev  # Arquivo de variáveis de ambiente específicas para desenvolvimento
     tty: true

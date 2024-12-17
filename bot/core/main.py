@@ -6,6 +6,7 @@ from scripts.message_manager import update_message_periodically
 from utils.database import create_server_data
 from utils.log import monitor_file
 from utils.player_events import player_events
+from utils.chat_events import message_on_server
 from commands import setup_commands
 from dotenv import load_dotenv
 
@@ -37,7 +38,7 @@ async def on_ready():
         if channel:
             try:
                 message = await channel.fetch_message(MESSAGE_ID)
-                print("[BOT STARTED] Pronto para monitoramento de IP, Servidor, Jogadores e Aniversariantes.")
+                print("[BOT STARTED] Pronto para monitoramento de IP, Servidor, Jogadores.")
 
                 await update_message_periodically(channel, message, session)
 
@@ -52,11 +53,13 @@ async def on_ready():
 async def background_tasks():
     await bot.wait_until_ready()
 
+    bot.loop.create_task(player_events(bot))
+    bot.loop.create_task(message_on_server(bot))
     bot.loop.create_task(setup_commands(bot))
     bot.loop.create_task(bot.sync_commands())
     bot.loop.create_task(bot.uptime_start_count())
     bot.loop.create_task(monitor_file(bot))
-    bot.loop.create_task(player_events(bot))
 
 
-bot.run(TOKEN)
+if __name__ == '__main__':
+    bot.run(TOKEN)

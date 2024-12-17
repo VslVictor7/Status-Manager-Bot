@@ -11,8 +11,9 @@ discord.py==2.4.0
 dnspython==2.7.0
 frozenlist==1.5.0
 idna==3.10
-lyricsgenius @ git+https://github.com/johnwmillr/LyricsGenius.git@4671f043cea5535f7dc4affbd55803ae5a1ec6a4
-mcstatus @ git+https://github.com/py-mine/mcstatus.git
+lyricsgenius @ git+https://github.com/johnwmillr/LyricsGenius.git@ee6c7fbb826dcbd99d5a75c49fde3a55bee43014
+mcrcon==0.7.0
+mcstatus @ git+https://github.com/py-mine/mcstatus.git@fc3b96f614f44cbc74207022aa54c95c0bd7e44f
 multidict==6.1.0
 propcache==0.2.1
 psycopg2==2.9.10
