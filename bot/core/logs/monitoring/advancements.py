@@ -1,10 +1,18 @@
 import discord
+import os
+from .offline_player_loader import load_json
 from deep_translator import GoogleTranslator
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SERVER_MODE = os.getenv('SERVER_MODE', '0')
+
+offline_players = load_json('players.json')
+default_uuid = "c2e45a26339547ff86c0b3dd0c2aa2d2"
 
 async def process_advancements_messages(log_line, channel):
     try:
-        if "[net.minecraft.server.MinecraftServer/]" not in log_line:
-            return
 
         ignore_patterns = [
             "[Rcon]", "[Not Secure]", "Disconnecting VANILLA connection attempt",
@@ -15,7 +23,10 @@ async def process_advancements_messages(log_line, channel):
         if any(pattern in log_line for pattern in ignore_patterns):
             return
 
-        player_name, message, event_name = extract_player_message(log_line)
+        try:
+            player_name, message, event_name = extract_player_message(log_line)
+        except (ValueError, IndexError):
+            return
 
         if player_name and message and event_name:
 
@@ -55,10 +66,15 @@ async def event_translation(channel, player_name, event_name, color, action):
 
 async def send_player_event(channel, player_name, event_message, event_name, event_translated, color):
     try:
+        uuid = player_name
+        if SERVER_MODE != "0":
+            for username, player_data in offline_players.items():
+                if username == player_name and player_data["original"] == False:
+                    uuid = default_uuid
         embed = discord.Embed(color=color)
         embed.set_author(
             name=f'{player_name} {event_message} {event_name} ({event_translated})',
-            icon_url=f"https://mineskin.eu/helm/{player_name}"
+            icon_url=f"https://mineskin.eu/helm/{uuid}"
         )
         await channel.send(embed=embed)
     except Exception as e:

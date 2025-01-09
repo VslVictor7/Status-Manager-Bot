@@ -28,7 +28,7 @@ async def on_ready():
     activity = discord.Activity(type=discord.ActivityType.watching, name="Movimentação do nosso servidor")
     await bot.change_presence(status=discord.Status.online, activity=activity)
 
-    interval = 50
+    interval = 60
     print(f"[BOT] Esperando {interval} segundos antes de iniciar as tarefas...")
     await asyncio.sleep(interval)
 

@@ -74,8 +74,8 @@ def display_top_players(player_times, top_n=5):
 async def get_username_from_uuid(uuid):
     try:
         if SERVER_MODE == "1":
-            for username, player_uuid in offline_players.items():
-                if player_uuid == uuid:
+            for username, player_data in offline_players.items():
+                if player_data["uuid"] == uuid:
                     return username
             return None
 

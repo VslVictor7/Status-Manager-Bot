@@ -5,13 +5,26 @@ services:
       dockerfile: Dockerfile
     container_name: status-manager-production
     image: status-manager-production
-    volumes:
-      - "D:/Minecraft Servers/Container-forge-server/Forge/world/stats:/data/world/stats"
-      - "D:/Minecraft Servers/Container-forge-server/Forge/logs/latest.log:/data/logs/latest.log"
-      # Mudar diretorio para stats do mundo minecraft : /data/world/stats
-      # Mudar diretorio para logs do servidor minecraft : /data/logs/latest.log
     env_file:
       - .env
-    restart: always
     tty: true
     stdin_open: true
+    environment:
+      RCON_HOST: ${RCON_HOST}
+      RCON_PASSWORD: ${RCON_PASSWORD}
+      RCON_PORT: ${RCON_PORT}
+    volumes:
+      - server-gartic:/data:ro
+      - /data/logs/latest.log:/logs/latest.log
+      - /data/world/stats:/world/stats
+    restart: always
+    networks:
+      - connection-gartic
+
+volumes:
+  server-gartic:
+    external: true
+
+networks:
+  connection-gartic:
+    external: true

@@ -2,17 +2,19 @@ import re
 import discord
 import os
 from logs.api_call import fetch_data_from_api
+from .offline_player_loader import load_json
 from dotenv import load_dotenv
 
 load_dotenv()
 
 API_PORT = int(os.getenv("API_PORT"))
+SERVER_MODE = os.getenv("SERVER_MODE", "0")
+
+offline_players = load_json("players.json")
+default_uuid = "c2e45a26339547ff86c0b3dd0c2aa2d2"
 
 async def process_death_event(log_line, channel):
     try:
-        if "[net.minecraft.server.MinecraftServer/]" not in log_line:
-            return
-
         ignore_patterns = [
             "[Rcon]", "[Not Secure]", "Disconnecting VANILLA connection attempt",
             "rejected vanilla connections", "lost connection", "id=<null>", "legacy=false",
@@ -53,10 +55,15 @@ async def process_death_event(log_line, channel):
 
 async def send_player_event(channel, player_name, event_message, color):
     try:
+        uuid = player_name
+        if SERVER_MODE != "0":
+            for username, player_data in offline_players.items():
+                if player_name == username and player_data["original"] == False:
+                    uuid = default_uuid
         embed = discord.Embed(color=color)
         embed.set_author(
             name=f"{player_name} {event_message}".strip("'\""),
-            icon_url=f"https://mineskin.eu/helm/{player_name}"
+            icon_url=f"https://mineskin.eu/helm/{uuid}"
         )
         await channel.send(embed=embed)
     except Exception as e:

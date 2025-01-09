@@ -3,12 +3,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bot-dev
+    container_name: bot-desenvolvimento
     image: discord-bot:dev
-    volumes:
-      - "D:/Minecraft Servers/TESTES/Servidor-testes/Servidor/world/stats:/data/world/stats"
-      - "D:/Minecraft Servers/TESTES/Servidor-testes/Servidor/logs/latest.log:/data/logs/latest.log"
     env_file:
-      - .env.dev  # Arquivo de variáveis de ambiente específicas para desenvolvimento
+      - .env
     tty: true
     stdin_open: true
+    environment:
+      RCON_HOST: ${RCON_HOST}
+      RCON_PASSWORD: ${RCON_PASSWORD}
+      RCON_PORT: ${RCON_PORT}
+    volumes:
+      - server_test:/data:ro
+      - /data/logs/latest.log:/logs/latest.log
+      - /data/world/stats:/world/stats
+    networks:
+      - request
+
+volumes:
+  server_test:
+    external: true
+
+networks:
+  request:
+    external: true
