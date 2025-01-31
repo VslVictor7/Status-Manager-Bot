@@ -126,6 +126,7 @@ With the two steps out of they way, we can now continue to configure the env fil
 `DISCORD_CHANNEL_CHAT_EVENTS_ID=`: This will be the ID of the channel to show every event currently set within the bot. So, people joining and leaving the server, deaths of players, players chatting, deaths of mobs, Advancements and Discord user messages appearing inside the server. It is advised to create a new channel just for this one.
 
 `MINECRAFT_SERVER=`: IP of your server. It will only accept: SRV records and Local ip's. IF you're running your server in a docker container, you need to insert the local ip address of the machine running the container (192.168.15.1 for example). If its not running in a docker container, you can just leave it there with "localhost".
+Having a SRV record: It'll only work IF the minecraft server is being hosted in a different machine than the bot. If they're both on the same machine, use a local ip as mentioned before.
 
 `MINECRAFT_PORT=`: This is explained by itself.
 
